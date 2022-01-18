@@ -5,6 +5,7 @@ set wildmenu		    " Display all matching files when we tab complete
 
 set showmatch               " show matching 
 set ignorecase              " case insensitive 
+set smartcase		    " case insensitive as long as you dont use case sensitiv letter
 set mouse=v                 " middle-click paste with 
 set hlsearch                " highlight search 
 set incsearch               " incremental search
@@ -26,3 +27,6 @@ set ttyfast                 " Speed up scrolling in Vim
 " set spell                 " enable spell check (may need to download language package)
 " set noswapfile            " disable creating swap file
 " set backupdir=~/.cache/vim " Directory to store backup files.
+
+" Set color theme
+colorscheme dracula
