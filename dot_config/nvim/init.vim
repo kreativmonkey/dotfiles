@@ -79,3 +79,7 @@ set cursorline              " highlight current cursorline
 "
 " Set color theme
 colorscheme dracula
+
+" Plugins
+Plug 'kyazdani42/nvim-web-devicons' " Recommended for coloured icons
+Plug 'akinsho/bufferlilne.nvim'     " bufferline with close icons
