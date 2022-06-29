@@ -1,0 +1,4 @@
+extands: relaxed
+
+rules:
+  line-length: disable
