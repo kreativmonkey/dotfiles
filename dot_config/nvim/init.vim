@@ -89,6 +89,7 @@ Plug 'junegunn/vim-easy-align'      " Easy align everything
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' } " Fuzzy Finder
 Plug 'dense-analysis/ale'            " linting for a lot of languages
 Plug 'Yggdroot/indentLine'           " indetion Marking Plugin
+Plug 'dracula/vim', { 'as': 'dracula' } " Dracula Theme for nvim
 
 "Plug 'kyazdani42/nvim-web-devicons' " Recommended for coloured icons
 "Plug 'akinsho/bufferlilne.nvim'     " bufferline with close icons
