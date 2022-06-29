@@ -61,9 +61,9 @@ set undoreload=10000        " Maximum numbers of lines to save for undo on a buf
 
 " Formatting {
 set wrap                    " wrapping long lines
-set tabstop=4 softtabstop=4 " number of columns occupied by a tab 
+set tabstop=2 softtabstop=2 " number of columns occupied by a tab 
 set expandtab               " converts tabs to white space
-set shiftwidth=4            " width for autoindents
+set shiftwidth=2            " width for autoindents
 set autoindent              " indent a new line the same amount as the line just typed
 set smartindent             " attempts to properly indent
 set pastetoggle=<F2>         " pastetoggle (sane indentation on pastes)
