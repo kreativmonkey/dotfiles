@@ -71,13 +71,10 @@ set pastetoggle=<F2>         " pastetoggle (sane indentation on pastes)
 
 
 " Vim UI{
-" use the light solarize theme:
-#set background=light
-
 set cursorline              " highlight current cursorline
 
 "}
-"
+
 " Set color theme
 colorscheme dracula
 
@@ -97,9 +94,10 @@ Plug 'dracula/vim', { 'as': 'dracula' } " Dracula Theme for nvim
 
 call plug#end()
 
+"
 " Setup for working with YAML files
+"
 autocmd FileType yaml setlocal ts=2 sts=2 sw=2 expandtab " Setup 2 spaces indention for YAML files
-
 
 "let g:indentLine_char = '⦙'         " changing indent character
 
@@ -107,3 +105,7 @@ let g:ale_echo_msg_format = '[%linter%] %s [%severity%]'
 let g:ale_sign_error = '✘'
 let g:ale_sign_warning = '⚠'
 let g:ale_lint_on_text_changed = 'never'    " only linting on save
+
+"
+" Setup for auto chezmoi apply on editing dotfiles
+autocmd BufWritePost ~/.local/share/chezmoi/* ! chezmoi apply --source-path "%"
