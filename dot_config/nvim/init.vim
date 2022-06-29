@@ -1,5 +1,4 @@
 " General Settings {
-autocmd FileType yaml setlocal ts=2 sts=2 sw=2 expandtab " Setup 2 spaces indention for YAML files
 
 set nocompatible            " disable compatibility to old-time vi
 
@@ -85,7 +84,16 @@ colorscheme dracula
 " Plugins
 #Plug 'kyazdani42/nvim-web-devicons' " Recommended for coloured icons
 #Plug 'akinsho/bufferlilne.nvim'     " bufferline with close icons
+
+
+" Setup for working with YAML files
+autocmd FileType yaml setlocal ts=2 sts=2 sw=2 expandtab " Setup 2 spaces indention for YAML files
+
 Plugin 'Yggdroot/indentLine'        " indetion Marking Plugin
 
+let g:indentLine_char = '⦙'         " changing indent character
 
-let g:indentLine_char = '⦙'
+let g:ale_echo_msg_format = '[%linter%] %s [%severity%]'
+let g:ale_sign_error = '✘'
+let g:ale_sign_warning = '⚠'
+let g:ale_lint_on_text_changed = 'never'    " only linting on save
