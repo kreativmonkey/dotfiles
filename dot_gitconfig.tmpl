@@ -1,5 +1,5 @@
 [user]
-	email = {{ if eq .chezmoi.hostname "pudebook" }}preisner@puzzle-itc.de{{ else }}kreativmonkey@calyrium.org{{ end }}
+	email = {{ if eq .data.client.role "work" }}preisner@puzzle-itc.de{{ else }}kreativmonkey@calyrium.org{{ end }}
 	name = Sebastian Preisner
 [core]
 	editor = vim
