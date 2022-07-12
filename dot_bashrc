@@ -60,6 +60,15 @@ alias gcm='git commit -m'
 alias gp='git push'
 alias gpsu='git push --set-upstream'
 alias ap='ansible-playbook'
+alias ua-drop-caches='sudo paccache -rk3; yay -Sc --aur --noconfirm'
+alias update-all='export TMPFILE="$(mktemp)"; \
+    sudo true; \
+    rate-mirrors endeavouros \
+      && sudo mv /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist-backup \
+      && sudo mv $TMPFILE /etc/pacman.d/mirrorlist \
+      && ua-drop-caches \
+      && yay -Syyu --noconfirm'
+
 
 # Set PATH so it includes user's private bin directories
 PATH="${HOME}/bin:${HOME}/.local/bin:${PATH}"
