@@ -70,6 +70,9 @@ alias update-all='export TMPFILE="$(mktemp)"; \
       && yay -Syyu --noconfirm'
 alias ll='exa -l'
 
+# Adding support for Zoxid (z command)
+eval "$(zoxide init bash)"
+
 # Set PATH so it includes user's private bin directories
 PATH="${HOME}/bin:${HOME}/.local/bin:${PATH}"
 
