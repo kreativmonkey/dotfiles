@@ -13,6 +13,6 @@ if test -e /usr/bin/fzf
   fzf_configure_bindings --history=\cs
 
   if test -e /usr/bin/exa
-    set fzf_preview_dir_cmd exa --all --color=always
+    set fzf_preview_dir_cmd exa --all --color=always --icons
   end
 end
