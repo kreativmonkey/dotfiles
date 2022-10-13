@@ -43,23 +43,25 @@ NC='\[\e[m\]'			# Color Reset
 ALERT="${BWhite}${On_Red}" # Bold White on red background
 
 # Useful aliases
-alias c='clear'
 alias ..='cd ..'
-alias ls='ls -CF --color=auto'
-alias ll='s -lisa --color=auto'
-alias mkdir='mkdir -pv'
+alias ap='ansible-playbook'
+alias c='clear'
 alias free='free -mt'
-alias ps='ps auxf'
-alias psgrep='ps aux | grep -v grep | grep -i -e VSZ -e'
-alias wget='wget -c'
-alias histg='history | grep'
-alias myip='curl ipv4.icanhazip.com'
 alias grep='grep --color=auto'
-alias vim='nvim'
 alias gcm='git commit -m'
 alias gp='git push'
 alias gpsu='git push --set-upstream'
-alias ap='ansible-playbook'
+alias histg='history | grep'
+alias ip='ip --color'
+alias ll='s -lisa --color=auto'
+alias ll='exa -l'
+alias ls='ls -CF --color=auto'
+alias mkdir='mkdir -pv'
+alias myip='curl ipv4.icanhazip.com'
+alias ps='ps auxf'
+alias psgrep='ps aux | grep -v grep | grep -i -e VSZ -e'
+alias vim='nvim'
+alias wget='wget -c'
 alias ua-drop-caches='sudo paccache -rk3; yay -Sc --aur --noconfirm'
 alias update-all='export TMPFILE="$(mktemp)"; \
     sudo true; \
@@ -68,7 +70,6 @@ alias update-all='export TMPFILE="$(mktemp)"; \
       && sudo mv $TMPFILE /etc/pacman.d/mirrorlist \
       && ua-drop-caches \
       && yay -Syyu --noconfirm'
-alias ll='exa -l'
 
 # Adding support for Zoxid (z command)
 eval "$(zoxide init bash)"
