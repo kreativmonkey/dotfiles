@@ -5,3 +5,14 @@ line-number = "relative"
 render = true
 character = "|"
 #skip-levels = 1
+
+[editor.whitespace]
+render = "all"
+# or control each character
+
+[editor.whitespace.characters]
+space = "·"
+nbsp = "⍽"
+tab = "→"
+newline = "⏎"
+tabpad = "·" # Tabs will look like "→···" (depending on tab width)
