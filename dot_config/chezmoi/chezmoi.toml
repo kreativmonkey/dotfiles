@@ -3,7 +3,7 @@
     autoPush = true
 
 [edit]
-    command = "nvim"
+    command = "hx"
 
 [data.client]
     role = "work"
