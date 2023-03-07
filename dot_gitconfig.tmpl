@@ -2,7 +2,7 @@
 	email = {{ if eq .client.role "work" }}preisner@puzzle-itc.de{{ else }}kreativmonkey@calyrium.org{{ end }}
 	name = Sebastian Preisner
 [core]
-	editor = vim
+	editor = hx
 	autocrlf = input
 	pager = delta
 [interactive]
@@ -10,7 +10,7 @@
 [delta]
 	navigate = true
 [merge]
-	conflictstyle = diff3
+	conflictstyle = delta
 	tool = meld
 [diff]
 	colorMoved = default
