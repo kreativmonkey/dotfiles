@@ -16,8 +16,9 @@ chezmoi init git@github.com:kreativmonkey/dotfiles.git
 
 For this dotfiles some other tools are required found in the list below:
 
-- [neovim](https://neovim.io/)
 - [dracula](https://github.com/dracula/vim) for Vim
-- [Fish](https://fishshell.com/) Shell
 - [exa](https://github.com/ogham/exa)
+- [Fish](https://fishshell.com/) Shell
+- [helix](https://helix-editor.com/)
+- [neovim](https://neovim.io/)
 - [zoxide](https://github.com/ajeetdsouza/zoxide)
