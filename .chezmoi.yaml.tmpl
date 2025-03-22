@@ -1,0 +1,8 @@
+{{ $email := promptStringOnce . "email" "What is your email address" -}}
+{{ $name := promptStringOnce . "name" "What is your name:" -}}
+{{ $type := promptStringOnce . "type" "Which type is your system? [Server, Private, Work]" -}}
+
+data:
+    email: {{ $email | quote }}
+    name: {{ $name | quote }}
+    type: {{ $type | quote }}
