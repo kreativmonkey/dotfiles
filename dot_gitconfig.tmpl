@@ -1,20 +1,27 @@
 [user]
 	email = {{ .email }}
-	name = {{ .name }}
+	name  = {{ .name }}
+
 [core]
-	editor = nvim
+	editor   = {{ .editor }}
 	autocrlf = input
-	pager = delta
+	pager    = delta
+
 [interactive]
 	diffFilter = delta --color-only
+
 [delta]
 	navigate = true
+
 [merge]
 	conflictstyle = diff3
-	tool = meld
+	tool          = meld
+
 [diff]
 	colorMoved = default
+
 [init]
 	defaultBranch = main
+
 [cola]
 	spellcheck = false
