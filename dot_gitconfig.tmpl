@@ -1,8 +1,8 @@
 [user]
-	email = {{ if eq .client.role "work" }}preisner@puzzle-itc.de{{ else }}kreativmonkey@calyrium.org{{ end }}
-	name = Sebastian Preisner
+	email = {{ .email }}
+	name = {{ .name }}
 [core]
-	editor = helix
+	editor = nvim
 	autocrlf = input
 	pager = delta
 [interactive]
