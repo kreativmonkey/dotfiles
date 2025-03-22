@@ -1,0 +1,16 @@
+{{ $email := promptStringOnce . "email" "What is your email address" -}}
+{{ $name := promptStringOnce . "name" "What is your name:" -}}
+{{ $type := promptStringOnce . "type" "Which type is your system? [Server, Private, Work]" -}}
+{{ $editor := promptStringOnce . "editor" "Choose your main editor" -}}
+
+[git]
+  autoCommit = true
+  autoPush   = true
+
+[edit]
+  command    = {{ $editor | quote }}
+
+[data]
+  email       = {{ $email | quote }}
+  name        = {{ $name | quote }}
+  type        = {{ $type | quote }}
