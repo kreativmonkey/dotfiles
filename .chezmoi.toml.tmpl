@@ -2,6 +2,11 @@
 {{ $name := promptStringOnce . "name" "What is your name:" -}}
 {{ $type := promptStringOnce . "type" "Which type is your system? [Server, Private, Work]" -}}
 {{ $editor := promptStringOnce . "editor" "Choose your main editor" -}}
+{{- $osid := .chezmoi.os -}}
+{{- if hashKey .chezmoi.osRelease "id" -}}
+{{-   $osid = printf "%s-%s" .chezmoi.os .chezmoi.osRelease.id -}}
+{{- end -}}
+
 
 [git]
   autoCommit = true
@@ -10,8 +15,12 @@
 [edit]
   command = {{ $editor | quote }}
 
+[diff]
+  pager = "delta"
+
 [data]
   email  = {{ $email | quote }}
   name   = {{ $name | quote }}
   type   = {{ $type | quote }}
   editor = {{ $editor | quote }}
+  osid   = {{ $osid | quote }}
