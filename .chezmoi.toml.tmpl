@@ -3,7 +3,7 @@
 {{ $type := promptStringOnce . "type" "Which type is your system? [Server, Private, Work]" -}}
 {{ $editor := promptStringOnce . "editor" "Choose your main editor" -}}
 {{- $osid := .chezmoi.os -}}
-{{- if hashKey .chezmoi.osRelease "id" -}}
+{{- if eq .chezmoi.os "linux" -}}
 {{-   $osid = printf "%s-%s" .chezmoi.os .chezmoi.osRelease.id -}}
 {{- end -}}
 
