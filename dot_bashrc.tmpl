@@ -80,7 +80,15 @@ alias update-all='export TMPFILE="$(mktemp)"; \
 PATH="${HOME}/bin:${HOME}/.local/bin:${PATH}"
 
 # Set prompt
-PS1="\n┌ ${Yellow}\u@\h${NC}: ${Blue}\w${NC} \n└ \\$ "
+function check_branch {
+  if git status > /dev/null 2>&1; then
+    branch="($(printf '\uE0A0') $(git branch --show current))"
+  else
+    branch=""
+  fi
+}
+PROMPT_COMMAND="check_branch"
+PS1="\n┌ ${Yellow}\u@\h${NC}: ${Blue}\w${NC} ${Green}\$branch${nc} \n└ \\$ "
 
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
 
