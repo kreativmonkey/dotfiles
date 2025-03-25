@@ -80,14 +80,16 @@ alias update-all='export TMPFILE="$(mktemp)"; \
 PATH="${HOME}/bin:${HOME}/.local/bin:${PATH}"
 
 # Set prompt
-function check_branch {
+function check_git {
   if git status > /dev/null 2>&1; then
-    branch="( $(printf '\uE0A0')$(git branch --show current) )"
+    project="$(basename $(git rev-parse --show-toplevel))"
+    branch="$(git branch --show current)"
+    git_prompt="( $project|$(printf '\uE0A0')$branch )"
   else
     branch=""
   fi
 }
-PROMPT_COMMAND="check_branch"
+PROMPT_COMMAND="check_git"
 PS1="\n┌ ${Yellow}\u@\h${NC}: ${Blue}\w${NC} ${Green}\$branch${NC} \n└ \\$ "
 
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
