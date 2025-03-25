@@ -82,7 +82,7 @@ PATH="${HOME}/bin:${HOME}/.local/bin:${PATH}"
 # Set prompt
 function check_branch {
   if git status > /dev/null 2>&1; then
-    branch="($(printf '\uE0A0') $(git branch --show current))"
+    branch="( $(printf '\uE0A0')$(git branch --show current) )"
   else
     branch=""
   fi
