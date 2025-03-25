@@ -85,4 +85,4 @@ PS1="\n┌ ${Yellow}\u@\h${NC}: ${Blue}\w${NC} \n└ \\$ "
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
 
 # Adding support for Zoxid (z command)
-eval "$(zoxide init bash)"
+if $(which zoxide); then eval "$(zoxide init bash)"; fi
