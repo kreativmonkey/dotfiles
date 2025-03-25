@@ -136,7 +136,7 @@ function check_git {
 
 function get_prompt_vars {
   check_git
-  fancy_path=shorten_path
+  fancy_path=$(shorten_path)
 }
 
 PROMPT_COMMAND="get_prompt_vars"
