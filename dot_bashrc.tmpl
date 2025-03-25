@@ -75,22 +75,72 @@ alias update-all='export TMPFILE="$(mktemp)"; \
       && yay -Syyu --noconfirm'
 {{- end }}
 
+# Easy search in history
+bind '"\e[A": history-search-backward'
+bind '"\e[B": history-search-forward'
 
 # Set PATH so it includes user's private bin directories
 PATH="${HOME}/bin:${HOME}/.local/bin:${PATH}"
 
 # Set prompt
+shorten_path () {
+    local org_path=${1:-$PWD} 
+    org_path=${org_path/#$HOME/\~}
+    
+    local shortened_path current_length
+    current_length=${#original_path}
+
+    if git rev-parse --show-toplevel > /dev/null 2>&1; then
+      git_root=$(git rev-parse --show-toplevel)
+      
+      # Extract the base folder name of the Git root directory
+      git_base=$(basename "$git_root")
+    fi
+
+    while [[ $org_path != "${org_path//\/}" ]] && (($current_length > 20))
+    do
+        # Remove the leading slash from the original path
+        org_path=${org_path#/}
+        
+        # Extract the first character of the current segment
+        [[ $org_path =~ \.?. ]]
+        
+        # Check if the current segment matches the Git base folder name
+        if [[ "$git_base" == "${BASH_REMATCH[0]}" ]]; then
+            # Preserve the full Git base folder name
+            shortened_path=$shortened_path/$git_base
+        else
+          # Append these characters to the shortened path, unless it's the Git root folder
+          shortened_path=$shortened_path/${BASH_REMATCH[0]}
+        fi
+        
+        # Remove the next segment up to the next slash
+        org_path=${org_path#*/}
+        
+        # Update the current length of the combined string
+        ((current_length=${#shortened_path}+${#org_path}))
+    done
+
+    # Gib den gekürzten Pfad aus
+    echo ${shortened_path/\/~/\~}${shortened_path+/}$org_path
+}
+
 function check_git {
   if git status > /dev/null 2>&1; then
-    project="$(basename $(git rev-parse --show-toplevel))"
     branch="$(git branch --show current)"
-    git_prompt="( $project|$(printf '\uE0A0')$branch )"
+    git_prompt="( $(printf '\uE0A0')$branch )"
   else
     branch=""
   fi
 }
-PROMPT_COMMAND="check_git"
-PS1="\n┌ ${Yellow}\u@\h${NC}: ${Blue}\w${NC} ${Green}\$git_prompt${NC} \n└ \\$ "
+
+function get_prompt_vars {
+  check_git
+  fancy_path=shorten_path
+}
+
+PROMPT_COMMAND="get_prompt_vars"
+PS1="\n┌ ${Yellow}\u@\h${NC}: ${Blue}\$fancy_path${NC} ${Green}\$git_prompt${NC} \n└ \\$ "
 
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
 
