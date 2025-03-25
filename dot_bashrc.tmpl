@@ -75,11 +75,6 @@ alias update-all='export TMPFILE="$(mktemp)"; \
       && yay -Syyu --noconfirm'
 {{- end }}
 
-# Adding support for Zoxid (z command)
-if $(which zoxide);
-then
-  eval "$(zoxide init bash)"
-fi
 
 # Set PATH so it includes user's private bin directories
 PATH="${HOME}/bin:${HOME}/.local/bin:${PATH}"
@@ -87,5 +82,10 @@ PATH="${HOME}/bin:${HOME}/.local/bin:${PATH}"
 # Set prompt
 PS1="\n┌ ${Yellow}\u@\h${NC}: ${Blue}\w${NC} \n└ \\$ "
 
-
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
+
+# Adding support for Zoxid (z command)
+if $(which zoxide);
+then
+  eval "$(zoxide init bash)"
+fi
