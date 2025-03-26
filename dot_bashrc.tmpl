@@ -83,7 +83,7 @@ bind '"\e[B": history-search-forward'
 PATH="${HOME}/bin:${HOME}/.local/bin:${PATH}"
 
 # Set prompt
-shorten_path () {
+function shorten_path {
     local org_path=$(pwd) 
     org_path=${org_path/#$HOME/\~}
     
