@@ -122,7 +122,7 @@ function shorten_path {
     done
 
     # Gib den gekürzten Pfad aus
-    echo ${shortened_path/\/~/\~}${shortened_path+/}$org_path
+    fancy_path=${shortened_path/\/~/\~}${shortened_path+/}$org_path
 }
 
 function check_git {
@@ -140,7 +140,7 @@ function get_prompt_vars {
 }
 
 PROMPT_COMMAND="get_prompt_vars"
-PS1="\n┌ ${Yellow}\u@\h${NC}: ${Blue}\${shorten_path}${NC} ${Green}\$git_prompt${NC} \n└ \\$ "
+PS1="\n┌ ${Yellow}\u@\h${NC}: ${Blue}\$fancy_path${NC} ${Green}\$git_prompt${NC} \n└ \\$ "
 
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
 
