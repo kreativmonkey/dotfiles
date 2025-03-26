@@ -161,7 +161,7 @@ function __prompt_command {
 
     # show conflicts
     if [ "$(git ls-files --unmerged 2>/dev/null)" ]; then
-      PS1+="|CONFICT"
+      PS1+="|CONFLICT"
     fi
 
     PS1+=")$NC "
