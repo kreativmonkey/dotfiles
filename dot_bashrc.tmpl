@@ -122,7 +122,7 @@ function shorten_path {
     done
 
     # Gib den gekürzten Pfad aus
-    fancy_path=${shortened_path/\/~/\~}${shortened_path+/}$org_path
+    echo ${shortened_path/\/~/\~}${shortened_path+/}$org_path
 }
 
 function check_git {
