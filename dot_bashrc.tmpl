@@ -130,20 +130,45 @@ function shorten_path {
     done
 
     # Gib den gekürzten Pfad aus
-    fancy_path="${shortened_path/\/~/\~}${shortened_path+/}$org_path"
+    printf -- "${shortened_path/\/~/\~}${shortened_path+/}$org_path"
+    return 0
 }
 
-function check_git {
-  if git status > /dev/null 2>&1; then
-    branch="$(git branch --show current)"
-    git_prompt="( $(printf '\uE0A0')$branch )"
-  else
-    git_prompt=""
+function __prompt_command {
+  local EXIT="$?"
+  PS1=""
+
+  # Coloring
+  local Green Blue Red Cyan Yellow NC
+  Green='\[\e[32m\]'
+  Yellow='\[\e[33m\]'
+  Blue='\[\e[34m\]'
+  Cyan='\[\e[36m\]'
+
+  NC='\[\e[m\]' # Reset to default
+
+  # Check if it is git repository
+  local repo_info rev_parse_exit_code
+  repo_info="$(git rev-parse --git-dir --is-inside-git-dir \
+		--is-bare-repository --is-inside-work-tree --show-ref-format \
+		--short HEAD 2>/dev/null)"
+	rev_parse_exit_code="$?"
+
+  if ! [ -z "$repo_info" ]; then
+    PS1+="$Cyan($(git branch --show current)"
+
+    # show conflicts
+    if [ "$(git ls-files --unmerged 2>/dev/null" ]; then
+      PS1+="|CONFICT"
+    fi
+
+    PS1+=")$NC "
   fi
+
+  PS1+="\n \\$ "
 }
 
-PROMPT_COMMAND="history -a;check_git;shorten_path"
-PS1="\n┌ ${Yellow}\u@\h${NC}: ${Blue}\$fancy_path${NC} ${Green}\$git_prompt${NC} \n└ \\$ "
+PROMPT_COMMAND="history -a;__prompt_command"
 
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
 
