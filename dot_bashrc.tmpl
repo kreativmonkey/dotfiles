@@ -105,7 +105,7 @@ function shorten_path {
       git_base=$(basename "$git_root")
     fi
 
-    while [[ $org_path != "${org_path//\/}" ]] && (($current_length > 20))
+    while [[ $org_path != "${org_path//\/}" ]] && ((current_length > 20))
     do
         # Remove the leading slash from the original path
         org_path=${org_path#/}
@@ -130,7 +130,7 @@ function shorten_path {
     done
 
     # Gib den gekürzten Pfad aus
-    fancy_path=${shortened_path/\/~/\~}${shortened_path+/}$org_path
+    fancy_path="${shortened_path/\/~/\~}${shortened_path+/}$org_path"
 }
 
 function check_git {
