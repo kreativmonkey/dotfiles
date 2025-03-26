@@ -159,6 +159,15 @@ function __prompt_command {
   if ! [ -z "$repo_info" ]; then
     PS1+="$Cyan($(git branch --show current)"
 
+    # add information about merge in progress
+    local check_merge merge_result
+    check_merge="$(git merge HEAD $> /dev/null)"
+    merge_result="$?"
+
+    if [ merge_result -ne 0 ]; then
+      PS1+="|MERGING"
+    fi
+
     # show conflicts
     if [ "$(git ls-files --unmerged 2>/dev/null)" ]; then
       PS1+="|CONFLICT"
