@@ -148,11 +148,10 @@ function __prompt_command {
   NC='\[\e[m\]' # Reset to default
 
   # Check if it is git repository
-  local repo_info rev_parse_exit_code
+  local repo_info 
   repo_info="$(git rev-parse --git-dir --is-inside-git-dir \
 		--is-bare-repository --is-inside-work-tree --show-ref-format \
 		--short HEAD 2>/dev/null)"
-	rev_parse_exit_code="$?"
 
   if ! [ -z "$repo_info" ]; then
     PS1+="$Cyan($(git branch --show current)"
