@@ -160,7 +160,7 @@ function __prompt_command {
     PS1+="$Cyan($(git branch --show current)"
 
     # show conflicts
-    if [ "$(git ls-files --unmerged) 2>/dev/null" ]; then
+    if [ "$(git ls-files --unmerged 2>/dev/null)" ]; then
       PS1+="|CONFICT"
     fi
 
