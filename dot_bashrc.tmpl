@@ -147,6 +147,9 @@ function __prompt_command {
 
   NC='\[\e[m\]' # Reset to default
 
+  PS1+="\n┍ $Green\u@\h$NC: "
+  PS1+="$Yellow$(shorten_path)$NC "
+
   # Check if it is git repository
   local repo_info 
   repo_info="$(git rev-parse --git-dir --is-inside-git-dir \
@@ -157,14 +160,14 @@ function __prompt_command {
     PS1+="$Cyan($(git branch --show current)"
 
     # show conflicts
-    if [ "$(git ls-files --unmerged 2>/dev/null" ]; then
+    if [ "$(git ls-files --unmerged) 2>/dev/null" ]; then
       PS1+="|CONFICT"
     fi
 
     PS1+=")$NC "
   fi
 
-  PS1+="\n \\$ "
+  PS1+="\n┕ \\$ "
 }
 
 PROMPT_COMMAND="history -a;__prompt_command"
