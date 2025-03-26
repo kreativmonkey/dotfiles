@@ -88,7 +88,7 @@ function shorten_path {
     org_path=${org_path/#$HOME/\~}
     
     local shortened_path current_length
-    current_length=${#original_path}
+    current_length=${#org_path}
 
     if git rev-parse --show-toplevel > /dev/null 2>&1; then
       git_root=$(git rev-parse --show-toplevel)
