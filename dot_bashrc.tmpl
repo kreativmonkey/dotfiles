@@ -99,6 +99,7 @@ function shorten_path {
 
     while [[ $org_path != "${org_path//\/}" ]] && (($current_length > 20))
     do
+        echo "ich mache was in wihle"
         # Remove the leading slash from the original path
         org_path=${org_path#/}
                
@@ -112,6 +113,7 @@ function shorten_path {
           
           # Append these characters to the shortened path, unless it's the Git root folder
           shortened_path=$shortened_path/${BASH_REMATCH[0]}
+          echo $shortened_path
         fi
         
         # Remove the next segment up to the next slash
