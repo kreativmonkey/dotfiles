@@ -101,15 +101,15 @@ shorten_path () {
     do
         # Remove the leading slash from the original path
         org_path=${org_path#/}
-        
-        # Extract the first character of the current segment
-        [[ $org_path =~ \.?. ]]
-        
+               
         # Check if the current segment matches the Git base folder name
-        if [[ "$git_base" == "${BASH_REMATCH[0]}" ]]; then
+        if [[ "$git_base" == "${org_path%%/*}" ]]; then
             # Preserve the full Git base folder name
-            shortened_path=$shortened_path/$git_base
+            shortened_path=$shortened_path/${Bold}$git_base${NC}
         else
+          # Extract the first character of the current segment
+          [[ $org_path =~ \.?. ]]
+          
           # Append these characters to the shortened path, unless it's the Git root folder
           shortened_path=$shortened_path/${BASH_REMATCH[0]}
         fi
