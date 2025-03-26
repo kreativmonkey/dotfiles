@@ -42,6 +42,14 @@ NC='\[\e[m\]'			# Color Reset
 
 ALERT="${BWhite}${On_Red}" # Bold White on red background
 
+# Configure History
+HISTCONTROL=ignoreboth    # corresponding to ignoredups and ignorespace
+HISTSIZE=30000            # Default: 1000
+HISTFILESIZE=90000        # Default: 2000
+HISTTIMEFORMAT="(%d.%m.%y) "
+HISTIGNORE="?:??:???:bash:clear:exit:man*:*--help"
+
+# Export default variables
 export EDITOR={{ .editor }}
 
 # Useful aliases
@@ -136,12 +144,7 @@ function check_git {
   fi
 }
 
-function get_prompt_vars {
-  check_git
-  shorten_path
-}
-
-PROMPT_COMMAND="get_prompt_vars"
+PROMPT_COMMAND="history -a;check_git;shorten_path"
 PS1="\n┌ ${Yellow}\u@\h${NC}: ${Blue}\$fancy_path${NC} ${Green}\$git_prompt${NC} \n└ \\$ "
 
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
