@@ -157,7 +157,7 @@ function __prompt_command {
 		--short HEAD 2>/dev/null)"
 
   if ! [ -z "$repo_info" ]; then
-    PS1+="$Cyan($(git branch --show current)"
+    PS1+="$Cyan($(git branch --show current)"
 
     # show conflicts
     if [ "$(git ls-files --unmerged 2>/dev/null)" ]; then
