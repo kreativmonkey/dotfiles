@@ -142,6 +142,7 @@ function __prompt_command {
   local Green Blue Red Cyan Yellow NC
   Green='\[\e[32m\]'
   Yellow='\[\e[33m\]'
+  Red='\[\e[31m\]'
   Blue='\[\e[34m\]'
   Cyan='\[\e[36m\]'
 
@@ -174,6 +175,10 @@ function __prompt_command {
     fi
 
     PS1+=")$NC "
+  fi
+  
+  if [ $EXIT -ne 0 ]; then
+    PS1+="$Red⭙$NC"
   fi
 
   PS1+="\n┕ \\$ "
