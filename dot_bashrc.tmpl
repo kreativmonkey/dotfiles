@@ -164,7 +164,7 @@ function __prompt_command {
     check_merge="$(git merge HEAD &> /dev/null)"
     merge_result="$?"
 
-    if [ merge_result -ne 0 ]; then
+    if [ $merge_result -ne 0 ]; then
       PS1+="|MERGING"
     fi
 
