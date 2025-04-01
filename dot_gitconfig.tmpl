@@ -2,6 +2,9 @@
 	email = {{ .email }}
 	name  = {{ .name }}
 
+[includeIf "gitdur:~/git/gitlab.puzzle.ch"]
+  path = ~/git/gitlab.puzzle.ch/.gitconfig
+
 [core]
 	editor   = {{ .editor }}
 	autocrlf = input
