@@ -1,4 +1,4 @@
-- Name: Role out main Configuration to {{ ansible_host }}
+- name: Role out main Configuration to {{ ansible_host }}
   hosts: localhost
   connection: local
   gather_facts: true
