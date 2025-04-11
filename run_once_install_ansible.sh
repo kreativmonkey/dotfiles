@@ -10,7 +10,7 @@ install_on_arch() {
 }
 
 install_linux() {
-  case $1 in:
+  case $1 in
     "Arch"|"EndevourOS")
       install_on_arch
       ;;
@@ -19,11 +19,6 @@ install_linux() {
       ;;
   esac
 }
-
-contains() {
-  [[ $1 =~ (^|[[:space:]])$2($|[[:space:]]) ]] && exit(0) || exit(1)
-}
-
 
 OS="$(uname -s)"
 case "${OS}" in
