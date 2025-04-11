@@ -1,0 +1,41 @@
+- Name: Role out main Configuration to {{ ansible_host }}
+  hosts: localhost
+  connection: local
+  gather_facts: true
+  become: true
+
+  tasks:
+    - name: Get my user
+      ansible.builtin.set_fact:
+        regular_user: "{{ ansible_env.SUDO_USER or ansible_user_id }}"
+
+    - name: Install common packages
+      ansible.builtin.package:
+        name:
+          - git
+          - htop
+          - nvim
+          - fish
+          - fzf
+          - tmux
+      
+    - name: Change shell to fish
+      ansible.builtin.user:
+        name: "{{ regular_user }}"
+        shell: /usr/bin/fish
+
+    - name: Create fonts directory
+      ansible.builtin.file:
+        path: "~{{ regular_user }}/.fonts"
+        state: directory
+        mode: "0755"
+        owner: "{{ regular_user }}"
+
+    - name: Installing Nerdfonts
+      ansible.builtin.unarchive:
+        src: https://github.com/ryanoasis/nerd-fonts/releases/download/v3.3.0/DroidSansMono.zip
+        dest: "~{{ regular_user }}/.fonts/"
+        remote_src: true
+        mode: "0755"
+        owner: "{{ regular_user }}"
+
