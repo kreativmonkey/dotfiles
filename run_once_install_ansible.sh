@@ -14,7 +14,7 @@ install_linux() {
     "Arch"|"EndevourOS")
       install_on_arch
       ;;
-    "Ubuntu"|"Debian"|"Linux Mint")
+    "Ubuntu"|"Debian"|"Linuxmint")
       install_on_debian
       ;;
   esac
