@@ -17,6 +17,9 @@
           - nvim
           - fish
           - fzf
+          - zoxide
+          - bat
+          - eza
           - tmux
       
     - name: Change shell to fish
