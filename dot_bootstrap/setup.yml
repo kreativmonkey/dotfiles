@@ -12,15 +12,28 @@
     - name: Install common packages
       ansible.builtin.package:
         name:
+          # Terminal tools 
           - git
           - htop
-          - nvim
           - fish
           - fzf
           - zoxide
           - bat
           - eza
+          - duf
+          - ripgrep
+          - yazi
           - tmux
+          # Editor
+          - nvim
+          # Backup/Restor
+          #- chezmoi
+          - restic
+          - rsync
+          # Network 
+          - mosh
+          - nmap
+          - tcpdump
       
     - name: Change shell to fish
       ansible.builtin.user:
