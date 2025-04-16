@@ -54,6 +54,7 @@ export EDITOR={{ .editor }}
 
 # Useful aliases
 alias ..='cd ..'
+alias cdg='cd $(git rev-parse --show-toplevel)'
 alias ap='ansible-playbook'
 alias c='clear'
 alias free='free -mt'
