@@ -12,9 +12,9 @@ end
 if test -e /usr/bin/fzf
   fzf_configure_bindings --history=\cs
 
-  set FZF_DEFAULT_OPTS --preview 'cat {}'
+  set FZF_DEFAULT_OPTS --preview 'bat {}'
 
-  if test -e /usr/bin/exa
-    set fzf_preview_dir_cmd exa --all --color=always --icons
+  if test -e /usr/bin/eza
+    set fzf_preview_dir_cmd eza --all --color=always --icons
   end
 end
