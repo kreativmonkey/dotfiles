@@ -1,4 +1,4 @@
-- name: Role out main Configuration to {{ ansible_hostname }}
+- name: Role out main Configuration
   hosts: localhost
   connection: local
   gather_facts: true
@@ -34,6 +34,8 @@
           - mosh
           - nmap
           - tcpdump
+          # Security
+          - bitwarden-cli
       
     - name: Change shell to fish
       ansible.builtin.user:
@@ -55,3 +57,31 @@
         mode: "0755"
         owner: "{{ regular_user }}"
 
+    - name: Create git folder structure
+      ansible.builtin.file:
+        path: "~{{ regular_user }}/git/{{ __git_projectfolder }}"
+        state: directory
+        mode: "0755"
+        owner: "{{ regular_user }}"
+        recurse: true
+      loop_control:
+        loop_var: __git_projectfolder
+      loop:
+        - github.com
+        - gitlab.com 
+        - codeberg.org
+        - gitlab.puzzle.ch
+
+    - name: Clone ansible setup repository
+      ansible.builtin.git:
+        repo: "https://github.com/kreativmonkey/archsetup-ansible"
+        dest: "~{{ regular_user }}/git/github.com/archsetup-ansible"
+        update: true
+
+    - name: Set owner for repository
+      ansible.builtin.file:
+        path: "~{{ regular_user }}/git/github.com/archsetup-ansible"
+        owner: "{{ regular_user }}"
+        group: "{{ regular_user }}"
+        mode: '0744'
+        recurse: true
