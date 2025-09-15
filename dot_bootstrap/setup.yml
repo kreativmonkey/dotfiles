@@ -30,6 +30,7 @@
           #- chezmoi
           - restic
           - rsync
+          - magic-wormhole
           # Network 
           - mosh
           - nmap
