@@ -2,10 +2,13 @@
 	email = {{ .email }}
 	name  = {{ .name }}
 
-[includeIf "gitdur:~/git/gitlab.puzzle.ch"]
+[includeIf "gitdir:~/git/gitlab.puzzle.ch"]
   path = ~/git/gitlab.puzzle.ch/.gitconfig
 
-[includeIf "gitdur:~/git/github.com"]
+[includeIf "gitdir:~/git/github.com"]
+  path = ~/git/github.com/.gitconfig
+
+[includeIf "gitdir:~/git/git.f4mily.net"]
   path = ~/git/github.com/.gitconfig
 
 [core]
