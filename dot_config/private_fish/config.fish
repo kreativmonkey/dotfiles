@@ -10,8 +10,6 @@ if test -e /usr/bin/zoxide
 end
 
 if test -e /usr/bin/fzf
-  fzf_configure_bindings --history=\cs
-
   set FZF_DEFAULT_OPTS --preview 'bat {}'
 
   if test -e /usr/bin/eza
