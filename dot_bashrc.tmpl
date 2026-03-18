@@ -91,6 +91,14 @@ bind '"\e[B": history-search-forward'
 # Set PATH so it includes user's private bin directories
 PATH="${HOME}/bin:${HOME}/.local/bin:${PATH}"
 
+# ssh-agent config
+if ! pgrep -u "$USER" ssh-agent > /dev/null; then
+  ssh-agent -t 1h > "$XDG_RUNTIME_DIR/ssh-agent.env"
+fi 
+if [! -f "$SSH_AUTH_SOCK" ]; then
+  source "$XDG_RUNTIME_DIR/ssh-agent.env" > /dev/null
+fi
+
 # Set prompt
 function shorten_path {
     local org_path=$(pwd) 
