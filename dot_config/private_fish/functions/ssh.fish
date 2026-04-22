@@ -1,7 +1,10 @@
 function ssh --description 'Wrapper for kitty ssh kitten'
-    if test "$TERM" = xterm-kitty
-        kitty +kitten ssh $argv
-    else
-        command ssh $argv
+    switch "$TERM"
+        case xterm-kitty
+            kitty +kitty ssh $argv
+        case wezterm
+            wezterm ssh $argv
+        case '*'
+            command ssh $argv
     end
 end
