@@ -87,7 +87,7 @@ alias update-all='export TMPFILE="$(mktemp)"; \
 # Add fix for kitty terminal ssh connections
 ssh() {
   case "$TERM" in 
-    xterm-kitty)  kitty +kitty ssh "$@" ;;
+    xterm-kitty)  kitty +kitten ssh "$@" ;;
     wezterm)      wezterm ssh "$@" ;;
     *)            command ssh "$@" ;;
   esac
