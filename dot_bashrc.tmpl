@@ -83,10 +83,15 @@ alias update-all='export TMPFILE="$(mktemp)"; \
       && ua-drop-caches \
       && yay -Syyu --noconfirm'
 {{- end }}
+
 # Add fix for kitty terminal ssh connections
-if [[ "$TERM" == "xterm-kitty" ]] || [[ "$TERMINAL_PROGRAM" == "kitty" ]]; then
-    alias ssh="kitty +kitten ssh"
-fi
+ssh() {
+    if [[ "$TERM" == "xterm-kitty" ]]; then
+        kitty +kitten ssh "$@"
+    else
+        /usr/bin/ssh "$@"
+    fi
+}
 
 # Easy search in history
 bind '"\e[A": history-search-backward'
