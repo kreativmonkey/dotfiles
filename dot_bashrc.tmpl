@@ -49,8 +49,17 @@ HISTFILESIZE=90000        # Default: 2000
 HISTTIMEFORMAT="(%d.%m.%y) "
 HISTIGNORE="?:??:???:bash:clear:exit:man*:*--help"
 
-# Export default variables
-export EDITOR={{ .editor }}
+# Editor configuration
+# Liste der bevorzugten Editoren in Prioritätsreihenfolge
+for cmd in nvim vim helix vi nano; do
+    if command -v "$cmd" >/dev/null 2>&1; then
+        export EDITOR="$cmd"
+        break
+    fi
+done
+
+# Optional: Set VISUAL to editor value
+export VISUAL="$EDITOR"
 
 # Useful aliases
 alias ..='cd ..'
@@ -84,7 +93,7 @@ alias update-all='export TMPFILE="$(mktemp)"; \
 if [ -f /usr/bin/eza ]
 then
   alias ls='eza'
-  alias ll='eza -ls'
+  alias ll='eza -l'
   alias la='eza -la'
 else
   alias ll='ls -lisa --color=auto'
