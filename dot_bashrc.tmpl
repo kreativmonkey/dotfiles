@@ -77,7 +77,7 @@ alias mkdir='mkdir -pv'
 alias myip='curl ipv4.icanhazip.com'
 alias ps='ps auxf'
 alias psgrep='ps aux | grep -v grep | grep -i -e VSZ -e'
-alias vim='nvim'
+[ -f /usr/bin/nvim ] && alias vim='nvim'
 alias wget='wget -c'
 {{- if eq .chezmoi.osRelease.idLike "arch" }}
 alias ua-drop-caches='sudo paccache -rk3; yay -Sc --aur --noconfirm'
