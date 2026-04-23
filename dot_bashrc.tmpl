@@ -64,9 +64,6 @@ alias gp='git push'
 alias gpsu='git push --set-upstream'
 alias histg='history | grep'
 alias ip='ip --color'
-alias ll='s -lisa --color=auto'
-alias ll='exa -l'
-alias ls='ls -CF --color=auto'
 alias mkdir='mkdir -pv'
 alias myip='curl ipv4.icanhazip.com'
 alias ps='ps auxf'
@@ -83,6 +80,16 @@ alias update-all='export TMPFILE="$(mktemp)"; \
       && ua-drop-caches \
       && yay -Syyu --noconfirm'
 {{- end }}
+# use eza for ls if installed
+if [ -f /usr/bin/eza ]
+then
+  alias ls='eza'
+  alias ll='eza -ls'
+  alias la='eza -la'
+else
+  alias ll='ls -lisa --color=auto'
+  alias ls='ls -CF --color=auto'
+fi
 
 # Add fix for kitty terminal ssh connections
 ssh() {
