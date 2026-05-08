@@ -130,28 +130,40 @@ function shorten_path {
     local shortened_path current_length
     current_length=${#org_path}
 
+    local git_base=""
+    local main_git_base=""
+
+    # Prüfen, ob wir in einem Git-Repo oder Worktree sind
     if git rev-parse --show-toplevel > /dev/null 2>&1; then
-      git_root=$(git rev-parse --show-toplevel)
-      
-      # Extract the base folder name of the Git root directory
-      git_base=$(basename "$git_root")
+        # 1. Basis-Ordner des aktuellen Verzeichnisses (Repo oder Worktree)
+        local git_root=$(git rev-parse --show-toplevel)
+        git_base=$(basename "$git_root")
+        
+        # 2. Basis-Ordner des Haupt-Repositories
+        local main_git_root=$(git worktree list 2>/dev/null | head -n 1 | awk '{print $1}')
+        if [[ -n "$main_git_root" ]]; then
+            main_git_base=$(basename "$main_git_root")
+        fi
     fi
 
     while [[ $org_path != "${org_path//\/}" ]] && ((current_length > 20))
     do
         # Remove the leading slash from the original path
         org_path=${org_path#/}
-               
-        # Check if the current segment matches the Git base folder name
-        if [[ "$git_base" == "${org_path%%/*}" ]]; then
-            # Preserve the full Git base folder name
-            shortened_path=$shortened_path/$git_base
+                
+        # Aktuelles Segment für den Vergleich isolieren
+        local current_segment="${org_path%%/*}"
+                
+        # Check if the current segment matches either the Git base OR the Main Git base
+        if [[ "$current_segment" == "$git_base" ]] || [[ -n "$main_git_base" && "$current_segment" == "$main_git_base" ]]; then
+            # Preserve the full folder name
+            shortened_path=$shortened_path/$current_segment
         else
-          # Extract the first character of the current segment
-          [[ $org_path =~ \.?. ]]
-          
-          # Append these characters to the shortened path, unless it's the Git root folder
-          shortened_path=$shortened_path/${BASH_REMATCH[0]}
+            # Extract the first character of the current segment
+            [[ $org_path =~ \.?. ]]
+            
+            # Append these characters to the shortened path
+            shortened_path=$shortened_path/${BASH_REMATCH[0]}
         fi
         
         # Remove the next segment up to the next slash
