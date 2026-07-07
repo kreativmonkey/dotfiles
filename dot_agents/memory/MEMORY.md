@@ -1,0 +1,6 @@
+- [Central agent config](central-agent-config.md) — ~/.agents is the shared source for skills + AGENTS.md + memory, symlinked into Claude/OpenCode/Gemini
+- [HA MCP server](ha-mcp-server.md) — ha-mcp Home Assistant server, HTTP transport via LAN IP 192.168.10.25:9583
+- [AC multi-split setup](ac-multisplit-setup.md) — all AC indoor units share one outdoor unit; always all-cool or all-heat, never mixed
+- [KNX MDT Beschattung](knx-mdt-beschattung.md) — living-room blind shading-release switches (J1/J4), polarity, and HA/actuator coordination pattern
+- [Vorta Storage-Box IPv6 workaround](vorta-storagebox-ipv6.md) — Hetzner-Box IPv4 refused SSH, AddressFamily inet6 gepinnt; Hetzner-Ticket offen
+- [Diskutieren statt blind umsetzen](diskutieren-statt-blind-umsetzen.md) — User-Anweisungen gegen frühere Design-Entscheidungen erst kurz gegenreden (Trade-offs), dann umsetzen
