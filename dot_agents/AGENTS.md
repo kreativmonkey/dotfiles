@@ -16,6 +16,17 @@ Skills, Docs und Memories und werden bei Bedarf geladen.
     geteiltes iSCSI — der Bestand war jahrelang falsch konfiguriert und es
     fiel niemandem auf.
 
+## Testen & Übergabe
+**Kein Code gilt als fertig, bevor er in einer Umgebung lief, die seine echten
+Abhängigkeiten importiert.** Lesen, `py_compile` und Typ-Raten sind keine
+Verifikation — sie übersehen genau die Fehler, die beim User landen (falsche
+API-Signaturen, umbenannte kwargs, strikte Decoder, Import-Fehler). Vor jeder
+Übergabe: lauffähige Umgebung sicherstellen (Skill **`nix-dev-env`**), den
+geänderten Pfad per Test oder echtem Lauf ausführen, Ergebnis nennen. Bugfix =
+Test, der den Bug vorher reproduziert. Geht Ausführen nachweislich nicht,
+**explizit benennen** was ungetestet bleibt — nie „sollte funktionieren" als
+getestet ausgeben. Details & Checkliste: Skill **`test-before-handoff`**.
+
 ## Memory
 Dateibasiertes Gedächtnis, von allen Tools geteilt: global `~/.agents/memory/`,
 pro Projekt `<projekt>/.agents/memory/` (git-excluded, nicht committen).
