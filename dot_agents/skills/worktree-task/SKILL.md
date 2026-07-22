@@ -11,8 +11,13 @@ Nie zwei Agents im selben Worktree.
 
 ## Anlegen
 
+**Zuerst den Default-Branch aktualisieren** — solange keine andere Anweisung
+vorliegt, den neuen Branch immer auf einem frischen `main` aufsetzen, damit
+der spätere PR nicht auf veraltetem Stand fußt:
+
 ```bash
-git worktree add ../<repo>-worktrees/<slug> -b <typ>/<slug>
+git -C <haupt-checkout> switch main && git -C <haupt-checkout> pull --ff-only
+git worktree add ../<repo>-worktrees/<slug> -b <typ>/<slug> main
 ```
 
 - Branch-Typen: `feat/`, `fix/`, …; Verzeichnisname = Branch-Slug.
