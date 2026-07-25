@@ -1,52 +1,56 @@
-# Zentrale Agent-Konfiguration
+# Central Agent Configuration
 
-Dieses Verzeichnis ist die zentrale, tool-uebergreifende Konfiguration fuer
-lokale KI-Agent-Clients. Die Idee ist: Regeln, Skills, Memories und Subagenten
-werden hier einmal gepflegt und dann in die jeweiligen Client-Konfigurationen
-verlinkt oder generiert.
+This directory is the shared configuration root for local AI agent clients. It
+keeps global instructions, skills, memories, and canonical subagent definitions
+in one place, then links or generates client-specific files as needed.
 
-Die lokale Single Source of Truth ist:
+The local source of truth is:
 
 ```text
 ~/.agents/
 ```
 
-## Inhalt
+## Contents
 
-| Pfad | Zweck |
+| Path | Purpose |
 | --- | --- |
-| `AGENTS.md` | Globale Instruktionen fuer alle Agenten. Wird von den Clients als `AGENTS.md`, `CLAUDE.md` oder Import geladen. |
-| `skills/<name>/SKILL.md` | Globale Skills. Ein Skill pro Unterverzeichnis. |
-| `agents/<name>.md` | Kanonische Subagent-Spezifikationen. Nicht direkt von allen Clients lesbar. |
-| `sync-agents.py` | Generator fuer client-spezifische Subagent-Dateien. |
-| `memory/` | Globales dateibasiertes Memory, geteilt zwischen Tools. |
-| `link-project-memory.sh` | Verdrahtet Projekt-Memorys unter `<projekt>/.agents/memory/` und Claude-Projekt-Symlinks. |
-| `plugins/` | Lokale Plugin-/Marketplace-Metadaten. |
+| `AGENTS.md` | Global instructions loaded by clients as `AGENTS.md`, `CLAUDE.md`, or an import. |
+| `skills/<name>/SKILL.md` | Global skills. One skill per directory. |
+| `agents/<name>.md` | Canonical subagent specifications. Clients do not all read this format directly. |
+| `sync-agents.py` | Generates client-specific subagent files. |
+| `memory/` | Shared global file-based memory. |
+| `link-project-memory.sh` | Wires project memories under `<project>/.agents/memory/` and Claude project symlinks. |
+| `plugins/` | Local plugin and marketplace metadata. |
 
-Projekt-Memorys gehoeren nicht in dieses Verzeichnis. Sie liegen im jeweiligen
-Projekt unter `<projekt>/.agents/memory/` und werden lokal git-excluded.
+Project memories do not belong in this directory. They live in each project at
+`<project>/.agents/memory/` and should be excluded from Git locally.
 
-## Angebundene Agent-Clients
+## Connected Agent Clients
 
-| Client | Globale Instruktionen | Skills | Subagenten | Eigentliche Client-Konfiguration |
+| Client | Global instructions | Skills | Subagents | Client configuration |
 | --- | --- | --- | --- | --- |
-| Claude Code | `~/.claude/CLAUDE.md -> ~/.agents/AGENTS.md` | `~/.claude/skills -> ~/.agents/skills` | generiert nach `~/.claude/agents/` | `~/.claude/settings.json`, `~/.claude/settings.local.json` |
-| OpenCode | `~/.config/opencode/AGENTS.md -> ~/.agents/AGENTS.md` | liest `~/.agents/skills` nativ | generiert nach `~/.config/opencode/agent/` | `~/.config/opencode/opencode.json` |
-| Gemini CLI | `~/.gemini/GEMINI.md` importiert `~/.agents/AGENTS.md` | `~/.gemini/skills -> ~/.agents/skills` | generiert nach `~/.gemini/agents/` | `~/.gemini/settings.json`, `~/.gemini/GEMINI.md` |
-| Codex CLI | `~/.codex/AGENTS.md -> ~/.agents/AGENTS.md` | einzelne Symlinks in `~/.codex/skills/`; kein Directory-Symlink, weil `.system/` dort bleiben muss | keine generierten Custom-Subagenten | `~/.codex/config.toml`, `~/.codex/hooks.json`, `~/.codex/rules/` |
-| Cursor | vorgesehen: `~/.cursor/AGENTS.md`, `~/.cursor/skills/`, `~/.cursor/agents/` | einzelne Symlinks, analog Codex | Generator unterstuetzt `~/.cursor/agents/` | `~/.cursor/`, ggf. `~/.cursor/mcp.json` |
+| Claude Code | `~/.claude/CLAUDE.md -> ~/.agents/AGENTS.md` | `~/.claude/skills -> ~/.agents/skills` | generated to `~/.claude/agents/` | `~/.claude/settings.json`, `~/.claude/settings.local.json` |
+| OpenCode | `~/.config/opencode/AGENTS.md -> ~/.agents/AGENTS.md` | reads `~/.agents/skills` natively | generated to `~/.config/opencode/agent/` | `~/.config/opencode/opencode.json` |
+| Gemini CLI | `~/.gemini/GEMINI.md` imports `~/.agents/AGENTS.md` | `~/.gemini/skills -> ~/.agents/skills` | generated to `~/.gemini/agents/` | `~/.gemini/settings.json`, `~/.gemini/GEMINI.md` |
+| Codex CLI | `~/.codex/AGENTS.md -> ~/.agents/AGENTS.md` | individual symlinks in `~/.codex/skills/`; no directory symlink because `.system/` must remain in place | no generated custom subagents | `~/.codex/config.toml`, `~/.codex/hooks.json`, `~/.codex/rules/` |
+| Cursor | intended: `~/.cursor/AGENTS.md`, `~/.cursor/skills/`, `~/.cursor/agents/` | individual symlinks, same pattern as Codex | generator supports `~/.cursor/agents/` | `~/.cursor/`, optionally `~/.cursor/mcp.json` |
+| Pi Agent | no global instruction file wired at the moment | individual symlinks in `~/.pi/agent/skills/` | no generated subagents | `~/.pi/agent/settings.json`, `~/.pi/agent/extensions/` |
 
-Hinweis zum Ist-Zustand: Cursor ist im Generator vorbereitet, lokal sind unter
-`~/.cursor/` aktuell aber nur Hooks vorhanden. Falls Cursor genutzt werden
-soll, muessen `AGENTS.md`, `skills/`, `agents/` und `mcp.json` dort angelegt
-werden.
+Current local state notes:
 
-## Weitergabe an andere Nutzer
+- Cursor support is present in the generator, but the local `~/.cursor/`
+  directory currently only contains hooks. Create `AGENTS.md`, `skills/`,
+  `agents/`, and `mcp.json` there before using Cursor with this setup.
+- Pi Agent is installed under `~/.pi/agent/`. Currently only the
+  `orchestration` skill is linked back to `~/.agents/skills`; global
+  `AGENTS.md` instructions and subagent sync are not visibly wired for Pi.
 
-1. Dieses Verzeichnis nach `~/.agents` kopieren oder als Repository klonen.
-2. Secrets, Tokens und host-spezifische Pfade nicht aus einer fremden Maschine
-   uebernehmen. MCP-Konfigurationen muessen pro Nutzer neu angelegt werden.
-3. Globale Instruktionen in die Clients verlinken:
+## How To Use
+
+1. Place this directory at `~/.agents`.
+2. Do not copy secrets, tokens, or host-specific paths from another machine.
+   MCP configuration should be recreated per user and per host.
+3. Link global instructions into the clients:
 
 ```bash
 ln -sfn ~/.agents/AGENTS.md ~/.claude/CLAUDE.md
@@ -56,32 +60,38 @@ mkdir -p ~/.codex
 ln -sfn ~/.agents/AGENTS.md ~/.codex/AGENTS.md
 ```
 
-4. Gemini nutzt eine Import-Datei statt eines reinen Symlinks. Am Anfang von
-   `~/.gemini/GEMINI.md` muss stehen:
+4. Gemini uses an import file instead of only a symlink. Put this at the top of
+   `~/.gemini/GEMINI.md`:
 
 ```text
 @/home/<user>/.agents/AGENTS.md
 ```
 
-5. Skills verlinken:
+5. Link skills:
 
 ```bash
 ln -sfn ~/.agents/skills ~/.claude/skills
 ln -sfn ~/.agents/skills ~/.gemini/skills
 mkdir -p ~/.codex/skills
 for d in ~/.agents/skills/*/; do ln -sfn "$(realpath "$d")" ~/.codex/skills/"$(basename "$d")"; done
+mkdir -p ~/.pi/agent/skills
+ln -sfn ~/.agents/skills/orchestration ~/.pi/agent/skills/orchestration
 ```
 
-Codex bekommt einzelne Skill-Symlinks, weil `~/.codex/skills/.system/`
-Codex-eigene Skills enthaelt und erhalten bleiben muss.
+Codex uses individual skill symlinks because `~/.codex/skills/.system/`
+contains Codex-managed built-in skills and must remain intact.
 
-6. Subagenten generieren:
+Pi is currently wired only for the `orchestration` skill. Before linking all
+global skills into Pi, verify that Pi supports the same skill structure and
+trigger semantics reliably.
+
+6. Generate subagents:
 
 ```bash
 python3 ~/.agents/sync-agents.py
 ```
 
-Danach liegen die erzeugten Dateien in:
+Generated files are written to:
 
 ```text
 ~/.claude/agents/
@@ -90,159 +100,164 @@ Danach liegen die erzeugten Dateien in:
 ~/.cursor/agents/
 ```
 
-7. Projekt-Memory fuer ein Projekt verdrahten:
+7. Wire project memory for a project:
 
 ```bash
-~/.agents/link-project-memory.sh /pfad/zum/projekt
+~/.agents/link-project-memory.sh /path/to/project
 ```
 
-Fuer Worktrees, die das Memory des Haupt-Checkouts teilen sollen:
+For worktrees that should share the main checkout memory:
 
 ```bash
-~/.agents/link-project-memory.sh /pfad/zum/worktree /pfad/zum/haupt-checkout
+~/.agents/link-project-memory.sh /path/to/worktree /path/to/main-checkout
 ```
 
-## Pflege-Regeln
+## Maintenance Rules
 
-- `AGENTS.md` bleibt kurz und enthaelt nur immer gueltige Regeln und
-  Lade-Trigger.
-- Detailwissen kommt in Skills, Docs oder Memories.
-- Neue globale Skills werden unter `skills/<name>/SKILL.md` angelegt.
-- Nach neuen Skills den Codex-Symlink-Loop erneut ausfuehren.
-- Neue oder geaenderte Subagenten werden nur unter `agents/<name>.md`
-  bearbeitet; danach `sync-agents.py` ausfuehren.
-- Generierte Dateien in Client-Verzeichnissen nicht manuell editieren.
-- Memorys erst nach Lesen von `memory/README.md` schreiben.
+- Keep `AGENTS.md` short. It should contain only always-valid rules and load
+  triggers.
+- Put detailed workflows in skills, docs, or memories.
+- Add new global skills under `skills/<name>/SKILL.md`.
+- Re-run the Codex skill symlink loop after adding a new global skill.
+- Edit subagents only under `agents/<name>.md`, then run `sync-agents.py`.
+- Do not manually edit generated files in client-specific directories.
+- Read `memory/README.md` before writing memories.
 
-## Aktuelle globale Skills
+## Global Skills
 
-Die Skills liegen unter `skills/`. Beispiele fuer die wichtigsten Workflows:
+Skills live under `skills/`. Important workflow examples:
 
-| Skill | Zweck |
+| Skill | Purpose |
 | --- | --- |
-| `worktree-task` | Ein Task = ein Branch = ein Worktree. |
-| `nix-dev-env` | Projekt mit deklarativer Nix-Dev-Shell und `justfile` ausstatten. |
-| `project-onboard` | Neues Projekt auf den Standard-Workflow bringen. |
-| `graphify` | Codebase-/Dokumenten-Graphen erstellen und abfragen. |
-| `diagnosing-bugs` | Strukturierter Debugging-Loop. |
-| `test-before-handoff` | Vor Uebergabe geaenderten Code wirklich ausfuehren/testen. |
-| `memory-gc` | Memory-Verzeichnis aufraeumen und Dubletten/Staleness finden. |
-| `incident-postmortem` | Nach komplexen Incidents Erkenntnisse als Memory/ADR festhalten. |
-| `ponytail*` | Minimalismus-/Overengineering-Pruefung. |
-| `caveman*` | Stark komprimierte Kommunikation und Review-/Commit-Formate. |
+| `worktree-task` | One task = one branch = one worktree. |
+| `nix-dev-env` | Add a declarative Nix dev shell and `justfile` to a project. |
+| `project-onboard` | Bring a new project onto the standard workflow. |
+| `graphify` | Create and query codebase/document knowledge graphs. |
+| `diagnosing-bugs` | Structured debugging loop. |
+| `test-before-handoff` | Actually run or test changed code before handoff. |
+| `memory-gc` | Audit memory directories for stale or duplicate entries. |
+| `incident-postmortem` | Capture complex incident learnings as memory or ADR. |
+| `ponytail*` | Minimalism and over-engineering checks. |
+| `caveman*` | Compressed communication, review, and commit formats. |
 
-Eine vollstaendige Liste liefert:
+List all installed global skills:
 
 ```bash
 find ~/.agents/skills -maxdepth 2 -name SKILL.md -printf '%h\n' | sed 's#.*/##' | sort
 ```
 
-## Subagenten
+## Subagents
 
-Kanonische Subagenten liegen unter `agents/`:
+Canonical subagents live under `agents/`:
 
-| Agent | Zweck |
+| Agent | Purpose |
 | --- | --- |
-| `ci-debugger` | CI-Fehler in GitLab, Forgejo und GitHub Actions diagnostizieren. |
-| `flux-debugger` | Flux/GitOps-Reconciliation debuggen. |
-| `k8s-debugger` | Kubernetes-Laufzeitprobleme read-only analysieren. |
-| `planner` | Plaene strukturieren. |
-| `security` | Defensive Security-Reviews. |
-| `testing` | Tests schreiben, ausfuehren und diagnostizieren. |
+| `ci-debugger` | Diagnose CI failures in GitLab, Forgejo, and GitHub Actions. |
+| `flux-debugger` | Debug Flux and GitOps reconciliation. |
+| `k8s-debugger` | Analyze Kubernetes runtime issues read-only. |
+| `planner` | Structure implementation plans. |
+| `security` | Defensive security reviews. |
+| `testing` | Write, run, and diagnose tests. |
 
-Die Ausgabeformate unterscheiden sich je Client, deshalb werden Subagenten
-nicht symlinked, sondern generiert.
+Subagents are generated rather than symlinked because each client uses a
+different file format.
 
 ## MCPs
 
-MCPs sind client-spezifisch konfiguriert. Diese README dokumentiert nur Namen,
-Transport und Speicherort. Secrets stehen in den jeweiligen Client-Konfigs oder
-in separaten Tool-Konfigurationen und duerfen nicht in eine geteilte README.
+MCPs are configured per client. This README documents names, transports, and
+configuration locations only. Secrets belong in local client configuration,
+environment variables, or separate tool configuration files.
 
 ### Codex CLI
 
-Konfiguration: `~/.codex/config.toml`
+Configuration: `~/.codex/config.toml`
 
-| MCP | Transport | Zweck / Hinweis |
+| MCP | Transport | Purpose / note |
 | --- | --- | --- |
-| `codebase-memory` | stdio: `~/.local/bin/codebase-memory-mcp` | Code-Graph fuer Repos; `search_graph` und `search_code` mit Approval. |
-| `forgejo` | stdio: `npx -y @ric_/forgejo-mcp` | Forgejo/Gitea API. Token/URL in `env`. |
-| `ha-mcp` | HTTP URL | Home Assistant MCP ueber LAN. |
-| `netbird` | stdio: `~/go/bin/mcp-netbird` | NetBird API. Token/Host in `env`. |
-| `akuvox` | stdio: `uv run --project ... akuvox-mcp` | Akuvox-Geraeteflotte. |
-| `proxmox-mcp-plus` | stdio: `uvx proxmox-mcp-plus` | Proxmox; nutzt `PROXMOX_MCP_CONFIG=~/.config/proxmox-mcp/config.json`. |
-| `all-inkl` | stdio: `npx -y mcp-all-inkl` | ALL-INKL/KAS API. Zugangsdaten in `env`. |
-| `n8n-mcp` | HTTP URL | n8n MCP Server; Auth per HTTP Header. |
+| `codebase-memory` | stdio: `~/.local/bin/codebase-memory-mcp` | Code graph for repositories; `search_graph` and `search_code` require approval. |
+| `forgejo` | stdio: `npx -y @ric_/forgejo-mcp` | Forgejo/Gitea API. Token and URL are configured in `env`. |
+| `ha-mcp` | HTTP URL | Home Assistant MCP over LAN. |
+| `netbird` | stdio: `~/go/bin/mcp-netbird` | NetBird API. Token and host are configured in `env`. |
+| `akuvox` | stdio: `uv run --project ... akuvox-mcp` | Akuvox device fleet. |
+| `proxmox-mcp-plus` | stdio: `uvx proxmox-mcp-plus` | Proxmox; uses `PROXMOX_MCP_CONFIG=~/.config/proxmox-mcp/config.json`. |
+| `all-inkl` | stdio: `npx -y mcp-all-inkl` | ALL-INKL/KAS API. Credentials are configured in `env`. |
+| `n8n-mcp` | HTTP URL | n8n MCP server. Auth is passed via HTTP header. |
 
 ### OpenCode
 
-Konfiguration: `~/.config/opencode/opencode.json`
+Configuration: `~/.config/opencode/opencode.json`
 
-| MCP | Transport | Zweck / Hinweis |
+| MCP | Transport | Purpose / note |
 | --- | --- | --- |
-| `headroom` | local command: `~/.local/bin/headroom mcp serve` | Kontext-Kompression/Headroom. |
-| `filesystem` | local command: `npx -y @modelcontextprotocol/server-filesystem ~/` | Dateisystemzugriff. |
-| `git` | local command: `uvx mcp-server-git --repository .` | Git-Operationen auf aktuellem Repo. |
-| `kubernetes` | local command: `npx -y kubernetes-mcp-server@latest` | Kubernetes-Read/Debug-Werkzeug. |
-| `memory` | local command: `npx -y @modelcontextprotocol/server-memory` | MCP-Memory-Server. |
-| `ripgrep` | local command: `npx -y mcp-ripgrep` | Schnelle Suche via ripgrep. |
+| `headroom` | local command: `~/.local/bin/headroom mcp serve` | Context compression via Headroom. |
+| `filesystem` | local command: `npx -y @modelcontextprotocol/server-filesystem ~/` | Filesystem access. |
+| `git` | local command: `uvx mcp-server-git --repository .` | Git operations for the current repository. |
+| `kubernetes` | local command: `npx -y kubernetes-mcp-server@latest` | Kubernetes read/debug tooling. |
+| `memory` | local command: `npx -y @modelcontextprotocol/server-memory` | MCP memory server. |
+| `ripgrep` | local command: `npx -y mcp-ripgrep` | Fast search via ripgrep. |
 
 ### Gemini CLI
 
-Konfiguration: `~/.gemini/settings.json`
+Configuration: `~/.gemini/settings.json`
 
-| MCP | Transport | Zweck / Hinweis |
+| MCP | Transport | Purpose / note |
 | --- | --- | --- |
-| `codebase-memory` | stdio: `~/.local/bin/codebase-memory-mcp` | Code-Graph fuer Repos. |
+| `codebase-memory` | stdio: `~/.local/bin/codebase-memory-mcp` | Code graph for repositories. |
 
 ### Claude Code
 
-Client-Konfiguration: `~/.claude/settings.json`
+Client configuration: `~/.claude/settings.json`
 
-In `settings.json` ist aktuell kein `mcpServers`-Block sichtbar. Die zentrale
-Memory vermerkt jedoch `codebase-memory` als user-scope MCP fuer Claude Code.
-Wenn Claude-MCPs auf einer neuen Maschine eingerichtet werden, sollten sie mit
-dem jeweiligen Client-Befehl erneut registriert und anschliessend verifiziert
-werden, statt fremde lokale Config-Dateien blind zu kopieren.
+No `mcpServers` block is currently visible in `settings.json`. The central
+memory records `codebase-memory` as a user-scope MCP for Claude Code. On a new
+machine, register Claude MCPs with the client command and verify them there
+instead of copying another host's local configuration.
 
 ### Cursor
 
-Erwartete MCP-Konfiguration: `~/.cursor/mcp.json`
+Expected MCP configuration: `~/.cursor/mcp.json`
 
-Lokal existiert diese Datei aktuell nicht. Die Memory beschreibt
-`codebase-memory` als geplante/urspruengliche Cursor-MCP-Anbindung. Fuer eine
-neue Maschine deshalb erst `~/.cursor/mcp.json` anlegen und im Cursor-Agent
-freigeben.
+This file does not currently exist locally. The central memory describes
+`codebase-memory` as the intended Cursor MCP binding. Create `~/.cursor/mcp.json`
+and approve the server in Cursor Agent before relying on it.
+
+### Pi Agent
+
+Client configuration: `~/.pi/agent/settings.json`
+
+No MCP configuration block is currently visible. `~/.pi/agent/` contains
+settings, auth, sessions, extensions, and `skills/`. Document Pi MCPs once the
+expected Pi MCP configuration format is clear.
 
 ## Codebase-Memory Standard
 
-Fuer groessere Repos gilt: Graph vor Grep. Der gemeinsame MCP-Server ist:
+For larger repositories, use the graph before grep. The shared MCP server is:
 
 ```text
 ~/.local/bin/codebase-memory-mcp
 ```
 
-Ein Repo wird einmal pro Haupt-Checkout indexiert:
+Index each repository once, using the main checkout:
 
 ```bash
 codebase-memory-mcp cli index_repository '{"repo_path":"/abs/path"}'
 ```
 
-Worktrees sollen den Index des Haupt-Checkouts verwenden, nicht eigene
-Elternverzeichnisse indexieren.
+Worktrees should use the main checkout index instead of indexing parent
+directories or each worktree separately.
 
-## Secrets und Host-spezifische Daten
+## Secrets And Host-Specific Data
 
-Nicht weitergeben:
+Do not share:
 
-- Tokens, Passwoerter, API-Keys und OAuth-Dateien.
-- Lokale Auth-Dateien wie `~/.codex/auth.json`, `~/.claude/.credentials.json`
-  oder `~/.gemini/oauth_creds.json`.
-- Host-spezifische IPs, private URLs und lokale Projektpfade, sofern sie nicht
-  bewusst Teil der Zielumgebung sind.
-- Backups unter `.backup-*`, falls sie alte Secrets enthalten koennten.
+- Tokens, passwords, API keys, or OAuth files.
+- Local auth files such as `~/.codex/auth.json`,
+  `~/.claude/.credentials.json`, `~/.gemini/oauth_creds.json`, or
+  `~/.pi/agent/auth.json`.
+- Host-specific IPs, private URLs, and local project paths unless they are
+  intentionally part of the target environment.
+- Backups under `.backup-*`, because they may contain old secrets.
 
-Fuer eine wiederverwendbare Distribution sollten MCP-Server als Vorlage
-dokumentiert werden, waehrend Credentials pro Nutzer ueber Umgebungsvariablen,
-Secret Stores oder lokale, nicht geteilte Config-Dateien gesetzt werden.
-
+For reusable distributions, document MCP servers as templates. Set credentials
+per user through environment variables, secret stores, or local unshared config
+files.
