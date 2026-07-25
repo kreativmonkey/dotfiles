@@ -19,6 +19,34 @@ linked or generated into client-specific locations.
 Clients read from this directory via symlinks or imports. No manual editing
 of client-specific files — everything flows from the canonical sources.
 
+## Features
+
+- **Single source of truth** — one `AGENTS.md`, one `skills/` directory, one `agents/` directory shared across all clients
+- **Multi-client support** — works with Claude Code, OpenCode, Gemini CLI, Codex CLI, and Cursor
+- **Centralized skills** — reusable workflows defined once, loaded everywhere
+- **Subagent code generation** — canonical agent specs are converted to client-specific formats automatically
+- **Shared memory** — file-based memory layer shared across all agents, global and per-project
+- **Worktree-aware** — project memory can be shared between main checkout and worktrees
+- **No secrets in the repo** — credentials stay in host-specific config or environment variables
+- **Client-native integration** — each client uses its own wiring mechanism (symlinks, imports) without modification
+
+## Requirements
+
+- **Operating system:** Linux or macOS (shell scripts use `bash`, `realpath`, `ln`)
+- **Python 3** — for `sync-agents.py` (no external dependencies)
+- **At least one supported AI agent client** installed:
+  - [Claude Code](https://docs.anthropic.com/en/docs/claude-code)
+  - [OpenCode](https://opencode.ai)
+  - [Gemini CLI](https://github.com/google-gemini/gemini-cli)
+  - [Codex CLI](https://github.com/openai/codex)
+  - [Cursor](https://cursor.sh)
+- **Git** (recommended) — for version control of the configuration and for `link-project-memory.sh` to manage `.git/info/exclude`
+- **Bash** — setup scripts and skill symlinks assume a POSIX-compatible shell
+
+Optional:
+- **Nix** — if using the `nix-dev-env` skill for reproducible dev shells
+- **codebase-memory MCP server** — for code graph queries in larger repositories
+
 ## Directory Structure
 
 | Path | Purpose |
