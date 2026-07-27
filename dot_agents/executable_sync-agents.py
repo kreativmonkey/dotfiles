@@ -16,6 +16,7 @@ Outputs:
     ~/.claude/agents/<name>.md            (Claude Code)
     ~/.config/opencode/agent/<name>.md    (OpenCode)
     ~/.gemini/agents/<name>.md            (Gemini CLI)
+    ~/.cursor/agents/<name>.md            (Cursor CLI/IDE)
 """
 import os
 import sys
@@ -27,6 +28,7 @@ OUT = {
     "claude": os.path.join(HOME, ".claude", "agents"),
     "opencode": os.path.join(HOME, ".config", "opencode", "agent"),
     "gemini": os.path.join(HOME, ".gemini", "agents"),
+    "cursor": os.path.join(HOME, ".cursor", "agents"),
 }
 
 # logical tool name -> Claude Code tool name
@@ -99,11 +101,21 @@ def emit_gemini(name, meta, tools, body):
     return frontmatter(fm, name, body)
 
 
+def emit_cursor(name, meta, tools, body):
+    fm = [f"name: {name}", f"description: {y(meta['description'])}"]
+    # Cursor's tool identifiers for subagents are not reliably documented
+    # (its shell tool is named "Shell", not "Bash"); a wrong name would
+    # silently strip the tool. Inherit all tools and rely on the system
+    # prompt's guardrails, same approach as Gemini. Model omitted -> session
+    # default (Cursor has no sonnet/opus aliases).
+    return frontmatter(fm, name, body)
+
+
 def frontmatter(fm_lines, name, body):
     return "---\n" + "\n".join(fm_lines) + "\n---\n" + BANNER.format(name=name) + "\n\n" + body
 
 
-EMITTERS = {"claude": emit_claude, "opencode": emit_opencode, "gemini": emit_gemini}
+EMITTERS = {"claude": emit_claude, "opencode": emit_opencode, "gemini": emit_gemini, "cursor": emit_cursor}
 
 
 def main():
@@ -121,8 +133,8 @@ def main():
         for tool, emit in EMITTERS.items():
             out = os.path.join(OUT[tool], f"{name}.md")
             open(out, "w", encoding="utf-8").write(emit(name, meta, tools, body))
-        print(f"  {name}: claude, opencode, gemini")
-    print(f"Synced {len(specs)} agent(s) to 3 tools.")
+        print(f"  {name}: " + ", ".join(EMITTERS))
+    print(f"Synced {len(specs)} agent(s) to {len(EMITTERS)} tools.")
 
 
 if __name__ == "__main__":

@@ -1,8 +1,8 @@
 # Central Agent Configuration
 
 Shared configuration root for multiple local AI agent clients (Claude Code,
-OpenCode, Gemini CLI, Codex CLI, Cursor). One directory, one source of truth —
-linked or generated into client-specific locations.
+OpenCode, Gemini CLI, Codex CLI, Cursor, Pi Agent). One directory, one source
+of truth — linked or generated into client-specific locations.
 
 ## Core Idea
 
@@ -12,6 +12,8 @@ linked or generated into client-specific locations.
 ├── skills/          ← reusable workflows (one dir per skill)
 ├── agents/          ← subagent specs (canonical format)
 ├── sync-agents.py   ← generates client-specific subagent files
+├── setup.sh         ← interactive or per-client setup (symlinks, skills)
+├── verify.sh        ← checks all symlinks and reports issues
 ├── memory/          ← shared global file-based memory
 └── link-project-memory.sh  ← wires project memories into the shared system
 ```
@@ -22,7 +24,7 @@ of client-specific files — everything flows from the canonical sources.
 ## Features
 
 - **Single source of truth** — one `AGENTS.md`, one `skills/` directory, one `agents/` directory shared across all clients
-- **Multi-client support** — works with Claude Code, OpenCode, Gemini CLI, Codex CLI, and Cursor
+- **Multi-client support** — works with Claude Code, OpenCode, Gemini CLI, Codex CLI, Cursor, and Pi Agent
 - **Centralized skills** — reusable workflows defined once, loaded everywhere
 - **Subagent code generation** — canonical agent specs are converted to client-specific formats automatically
 - **Shared memory** — file-based memory layer shared across all agents, global and per-project
@@ -40,6 +42,7 @@ of client-specific files — everything flows from the canonical sources.
   - [Gemini CLI](https://github.com/google-gemini/gemini-cli)
   - [Codex CLI](https://github.com/openai/codex)
   - [Cursor](https://cursor.sh)
+  - [Pi Agent](https://github.com/earendil-works/pi)
 - **Git** (recommended) — for version control of the configuration and for `link-project-memory.sh` to manage `.git/info/exclude`
 - **Bash** — setup scripts and skill symlinks assume a POSIX-compatible shell
 
@@ -54,6 +57,8 @@ Optional:
 | `AGENTS.md` | Global instructions. Clients load this as `AGENTS.md`, `CLAUDE.md`, or via import. Should contain only always-valid rules and load triggers — details belong in skills, docs, or memories. |
 | `skills/<name>/SKILL.md` | Global skills. One skill per directory. Reusable workflows triggered by keywords or user intent. |
 | `agents/<name>.md` | Canonical subagent specifications. Simple frontmatter format — `sync-agents.py` converts these into client-specific formats. |
+| `setup.sh` | Interactive or per-client setup. Links AGENTS.md, skills, and runs sync-agents.py. |
+| `verify.sh` | Checks all symlinks, skill counts, and subagent files. Reports OK/WARN/FAIL per client. |
 | `sync-agents.py` | Generates subagent files for Claude Code, OpenCode, Gemini CLI, and Cursor from the canonical specs. |
 | `memory/` | Shared global file-based memory. Declarative facts that persist across sessions. Read `memory/README.md` for write rules. |
 | `link-project-memory.sh` | Wires project memories under `<project>/.agents/memory/` and creates Claude project symlinks. Also handles worktree memory sharing. |
@@ -71,6 +76,7 @@ The wiring differs per client because each has its own configuration format.
 | Gemini CLI | import directive in `GEMINI.md` | directory symlink | generated via `sync-agents.py` |
 | Codex CLI | symlink `AGENTS.md` | individual skill symlinks (must not overwrite `.system/`) | no custom subagents |
 | Cursor | symlink `AGENTS.md` | individual skill symlinks | generated via `sync-agents.py` |
+| Pi Agent | symlink `AGENTS.md` | individual skill symlinks | no custom subagents |
 
 ## Setup
 
@@ -81,59 +87,36 @@ git clone <repo> ~/.agents
 # or copy/symlink to ~/.agents
 ```
 
-### 2. Link global instructions
+### 2. Run setup.sh
+
+Interactive (menu):
 
 ```bash
-# Claude Code
-ln -sfn ~/.agents/AGENTS.md ~/.claude/CLAUDE.md
-
-# OpenCode
-mkdir -p ~/.config/opencode
-ln -sfn ~/.agents/AGENTS.md ~/.config/opencode/AGENTS.md
-
-# Codex CLI
-mkdir -p ~/.codex
-ln -sfn ~/.agents/AGENTS.md ~/.codex/AGENTS.md
+~/.agents/setup.sh
 ```
 
-**Gemini** uses an import instead of a symlink. Add this line to
-`~/.gemini/GEMINI.md`:
-
-```
-@/home/<user>/.agents/AGENTS.md
-```
-
-### 3. Link skills
+Per-client:
 
 ```bash
-# Claude Code
-ln -sfn ~/.agents/skills ~/.claude/skills
-
-# Gemini CLI
-ln -sfn ~/.agents/skills ~/.gemini/skills
-
-# Codex CLI (individual symlinks — .system/ must remain intact)
-mkdir -p ~/.codex/skills
-for d in ~/.agents/skills/*/; do
-  ln -sfn "$(realpath "$d")" ~/.codex/skills/"$(basename "$d")"
-done
+~/.agents/setup.sh claude     # nur Claude Code
+~/.agents/setup.sh opencode   # nur OpenCode
+~/.agents/setup.sh gemini     # nur Gemini CLI
+~/.agents/setup.sh codex      # nur Codex CLI
+~/.agents/setup.sh pi         # nur Pi Agent
+~/.agents/setup.sh all        # alle Clients
 ```
 
-### 4. Generate subagents
+The script links `AGENTS.md`, skills, and runs `sync-agents.py` for the
+selected client. Re-run after adding new global skills.
+
+### 3. Verify setup
 
 ```bash
-python3 ~/.agents/sync-agents.py
+~/.agents/verify.sh           # alle installierten Clients prüfen
+~/.agents/verify.sh claude    # nur Claude Code prüfen
 ```
 
-Writes to:
-- `~/.claude/agents/`
-- `~/.config/opencode/agent/`
-- `~/.gemini/agents/`
-- `~/.cursor/agents/`
-
-Re-run after adding or changing files in `~/.agents/agents/`.
-
-### 5. Wire project memory
+### 4. Wire project memory
 
 For each project that should share memory across agents:
 
@@ -249,4 +232,4 @@ environment variables, secret stores, or local unshared config files.
 - Edit subagents only in `agents/<name>.md`, then re-run `sync-agents.py`
 - Do not manually edit generated files in client directories
 - Read `memory/README.md` before writing memories
-- Re-run Codex skill symlink loop after adding new global skills
+- After adding new global skills: `./setup.sh all` to re-link for all clients
