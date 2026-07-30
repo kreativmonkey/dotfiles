@@ -1,0 +1,26 @@
+{
+  "//": "Logische Modell-Stufen -> Modell-ID pro Tool. Regel: AGENTS.md, Abschnitt Delegation / Modell-Routing.",
+  "//tiers": "small = mechanisch/prüfbar | medium = abgegrenzter Auftrag | large = teures Fehlurteil",
+  "//unmapped": "Fehlt eine Stufe für ein Tool, laesst sync-agents.py das model-Feld weg -> Tool erbt sein Session-Modell.",
+
+  "claude": {
+    "small": "haiku",
+    "medium": "sonnet",
+    "large": "opus"
+  },
+
+  "//opencode": "Lokales Ollama (siehe provider.ollama in opencode.json). 'large' absichtlich unbelegt: kein starkes lokales Modell vorhanden -> erbt Session-Modell.",
+  "opencode": {
+    "small": "ollama/gemma4:latest",
+    "medium": "ollama/qwen3-coder:30b"
+  },
+
+  "gemini": {
+    "small": "gemini-3-flash-preview",
+    "medium": "gemini-3-flash-preview",
+    "large": "gemini-3-preview"
+  },
+
+  "//cursor": "Cursor-Subagents kennen keine Modell-Aliase und cursor-agent ist hier nicht installiert -> alles erbt.",
+  "cursor": {}
+}
