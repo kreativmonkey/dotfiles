@@ -212,14 +212,15 @@ find ~/.agents/skills -maxdepth 2 -name SKILL.md -printf '%h\n' | sed 's#.*/##' 
 
 ## Subagents
 
-| Agent | Purpose |
-| --- | --- |
-| `ci-debugger` | Diagnose CI failures in GitLab, Forgejo, and GitHub Actions. |
-| `flux-debugger` | Debug Flux and GitOps reconciliation. |
-| `k8s-debugger` | Analyze Kubernetes runtime issues (read-only). |
-| `planner` | Structure implementation plans before coding. |
-| `security` | Defensive security reviews. |
-| `testing` | Write, run, and diagnose tests. |
+| Agent | Stufe | Purpose |
+| --- | --- | --- |
+| `sweeper` | `small` | Mechanische Sucharbeit: finden, zählen, extrahieren. Read-only, gibt nur Treffer mit `pfad:zeile` zurück. |
+| `ci-debugger` | `medium` | Diagnose CI failures in GitLab, Forgejo, and GitHub Actions. |
+| `flux-debugger` | `medium` | Debug Flux and GitOps reconciliation. |
+| `k8s-debugger` | `medium` | Analyze Kubernetes runtime issues (read-only). |
+| `testing` | `medium` | Write, run, and diagnose tests. |
+| `planner` | `large` | Structure implementation plans before coding. |
+| `security` | `large` | Defensive security reviews. |
 
 Add new agents by creating `agents/<name>.md` and running `sync-agents.py`.
 
