@@ -33,7 +33,7 @@ No `flake-utils`: `nixpkgs.lib.genAttrs` does the same without an extra input.
         };
       });
 
-      formatter = forAllSystems (pkgs: pkgs.nixfmt-rfc-style);
+      formatter = forAllSystems (pkgs: pkgs.nixfmt);
     };
 }
 ```
@@ -114,7 +114,7 @@ hermetic, fast gates (format/lint of the tree) and leave tests to `just test`/CI
 
 ```nix
 checks = forAllSystems (pkgs: {
-  fmt = pkgs.runCommand "fmt-check" { buildInputs = [ pkgs.nixfmt-rfc-style ]; } ''
+  fmt = pkgs.runCommand "fmt-check" { buildInputs = [ pkgs.nixfmt ]; } ''
     nixfmt --check ${self}/flake.nix && touch $out
   '';
 });

@@ -69,7 +69,7 @@ Requirements:
 - `devShells.default` with: toolchain, package manager, **test framework**, **all CI
   tools**, and `just`.
 - `shellHook` printing a one-line hint (in the skeleton).
-- `formatter` set to `nixfmt-rfc-style` (in the skeleton), so `nix fmt` works.
+- `formatter` set to `nixfmt` (in the skeleton; `nixfmt-rfc-style` is a deprecated alias since nixos-26.05), so `nix fmt` works.
 - **Verify every package attribute you are not 100% sure of** before relying on it:
   `nix eval github:NixOS/nixpkgs/<branch>#<attr>.name` — if it errors, search the
   real name with `nix search nixpkgs <term>`. Never invent attribute names.

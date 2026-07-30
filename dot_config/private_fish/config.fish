@@ -1,5 +1,8 @@
 if status is-interactive
     # Commands to run in interactive sessions can go here
+    if not abbr --query k
+        abbr -a k kubectl
+    end
 end
 if test -e /usr/bin/mcfly
   mcfly init fish | source

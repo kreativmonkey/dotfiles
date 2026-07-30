@@ -144,12 +144,40 @@ Canonical specs live in `agents/<name>.md` with this format:
 name: my-agent
 description: one line — used by the main agent to decide when to call this subagent
 tools: bash, read, grep, glob, edit, write, webfetch, task
-model: sonnet            # sonnet | opus | inherit
+model: medium            # small | medium | large | inherit — kleinste Stufe,
+                         # die die Aufgabe sicher löst (siehe AGENTS.md,
+                         # Abschnitt Delegation / Modell-Routing)
 temperature: 0.1
 ---
 
 <markdown body = system prompt>
 ```
+
+### Modell-Stufen über Tools hinweg
+
+`model:` nennt eine **logische Stufe**, kein Vendor-Modell — dieselbe Spec-Datei
+soll in jedem Tool richtig routen. Die Zuordnung Stufe → Modell-ID pro Tool
+steht in `models.json`:
+
+| Stufe | Claude Code | OpenCode | Gemini CLI |
+| --- | --- | --- | --- |
+| `small` | `haiku` | `ollama/gemma4:latest` | `gemini-3-flash-preview` |
+| `medium` | `sonnet` | `ollama/qwen3-coder:30b` | `gemini-3-flash-preview` |
+| `large` | `opus` | *(unbelegt → erbt)* | `gemini-3-preview` |
+
+- Fehlt eine Stufe für ein Tool, lässt `sync-agents.py` das `model`-Feld weg —
+  das Tool erbt sein Session-Modell. Kein stiller Fallback auf ein falsches
+  Modell.
+- Alte Specs mit `haiku`/`sonnet`/`opus` gelten als Synonyme für
+  `small`/`medium`/`large`. Ein unbekannter Wert bricht den Sync ab, bevor
+  irgendeine Datei geschrieben wird.
+- `sync-agents.py` protokolliert pro Agent, in welchen Tools die Stufe wirklich
+  gepinnt wurde.
+- **Codex CLI** kennt keine eigenen Subagent-Specs (seine Subagents sind
+  eingebaut, Feature `multi_agent`). Die Stufe lässt sich dort nur global
+  setzen: `default_subagent_model` und `default_subagent_reasoning_effort`
+  unter `[agents]` in `~/.codex/config.toml`.
+- **Cursor** bleibt unbelegt, solange `cursor-agent` hier nicht installiert ist.
 
 The `sync-agents.py` script reads these and emits client-specific formats.
 Claude uses tool names like `Bash`, `Read`; OpenCode uses lowercase booleans;
