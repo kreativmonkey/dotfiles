@@ -1,7 +1,7 @@
 # Globale AGENTS.md
 
 Zentrale, tool-übergreifende Instruktionen für alle CLI-Agenten
-(Claude Code, OpenCode, Gemini CLI). Single Source of Truth: ~/.agents/AGENTS.md
+(Claude Code, OpenCode, Gemini CLI, Codex CLI, Cursor). Single Source of Truth: ~/.agents/AGENTS.md
 Hier stehen nur immer gültige Regeln und Lade-Trigger — Details liegen in
 Skills, Docs und Memories und werden bei Bedarf geladen.
 
@@ -15,17 +15,6 @@ Skills, Docs und Memories und werden bei Bedarf geladen.
   - Beispiel (nicht wiederholen): CNPG empfiehlt node-lokales Storage, nicht
     geteiltes iSCSI — der Bestand war jahrelang falsch konfiguriert und es
     fiel niemandem auf.
-
-## Testen & Übergabe
-**Kein Code gilt als fertig, bevor er in einer Umgebung lief, die seine echten
-Abhängigkeiten importiert.** Lesen, `py_compile` und Typ-Raten sind keine
-Verifikation — sie übersehen genau die Fehler, die beim User landen (falsche
-API-Signaturen, umbenannte kwargs, strikte Decoder, Import-Fehler). Vor jeder
-Übergabe: lauffähige Umgebung sicherstellen (Skill **`nix-dev-env`**), den
-geänderten Pfad per Test oder echtem Lauf ausführen, Ergebnis nennen. Bugfix =
-Test, der den Bug vorher reproduziert. Geht Ausführen nachweislich nicht,
-**explizit benennen** was ungetestet bleibt — nie „sollte funktionieren" als
-getestet ausgeben. Details & Checkliste: Skill **`test-before-handoff`**.
 
 ## Memory
 Dateibasiertes Gedächtnis, von allen Tools geteilt: global `~/.agents/memory/`,
@@ -73,6 +62,34 @@ Leitplanken:
 Vor jeder nicht-trivialen Aufgabe prüfen, ob ein spezialisierter Subagent
 passt (z. B. k8s-debugger, testing, security) — dann delegieren statt inline
 arbeiten. Den spezifischsten Agent bevorzugen.
+
+**Modell-Routing: das kleinste Modell, das die Aufgabe sicher löst.** Das große
+Modell orchestriert und urteilt, kleinere Modelle machen die Mengenarbeit — das
+gilt immer, nicht erst wenn der User es im Prompt erwähnt.
+- **`small`:** mechanisch und am Ergebnis prüfbar — Logs und Dateien
+  durchsuchen, Vorkommen zählen, Inventar, Renames, Boilerplate,
+  Datenextraktion nach vorgegebenem Schema. Dafür gibt es den Subagent
+  **`sweeper`** (read-only, liefert nur Treffer mit `pfad:zeile`).
+- **`medium`:** abgegrenzter Auftrag mit klarem Ziel und verifizierbarem
+  Ergebnis — Tests schreiben/reparieren, Fix in bekanntem Modul, Debugging
+  entlang eines Standardablaufs, Doku, Recherche.
+- **`large`:** nur wo ein Fehlurteil teuer ist — Architektur und Planung,
+  Security-Review, Root-Cause bei unklarem Fehlerbild, Synthese vieler
+  Teilergebnisse, Endabnahme. „Aufwendig" ist kein Grund für `large`;
+  „schwer zu entscheiden" ist es.
+- **Doppelter Gewinn:** Suchtreffer und Log-Dumps bleiben im Subagent, zurück
+  kommt nur das Ergebnis — spart Kosten *und* Kontext im Hauptthread.
+- **Eskalieren statt raten:** kommt ein kleines Modell nicht weiter oder ist
+  sein Ergebnis nicht überprüfbar, an die nächste Stufe übergeben — mit dem
+  schon gesammelten Kontext, nicht von null.
+- **Verankern, nicht wiederholen:** die Stufe steht im Subagent-Spec
+  (`~/.agents/agents/<name>.md`, `model: small|medium|large|inherit`), die
+  Stufe→Modell-Zuordnung pro Tool in `~/.agents/models.json`; ausgerollt mit
+  `~/.agents/sync-agents.py`. Fehlt eine Zuordnung, erbt das Tool sein
+  Session-Modell. Codex CLI hat keinen Spec-Layer — dort greift
+  `[agents].default_subagent_model` in `~/.codex/config.toml`. Pro Aufruf
+  abweichen ist ok (Claude Code: `model`-Parameter des Agent-Tools), die Regel
+  steht im Spec — nicht im Prompt.
 
 ## Umgebung
 - **Jedes Projekt bekommt eine deklarative Nix-Dev-Shell.** Tooling über
