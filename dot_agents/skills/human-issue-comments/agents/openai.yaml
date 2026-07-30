@@ -1,0 +1,4 @@
+interface:
+  display_name: "Human Issue Comments"
+  short_description: "Draft natural issue and PR comments"
+  default_prompt: "Use $human-issue-comments to draft a concise, natural PR or issue comment."
